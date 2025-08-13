@@ -5,89 +5,488 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MY_LOVE</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at top left, #ff6a88, #ff99ac, #ffc2d1);
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ff6a88 0%, #ff99ac 50%, #ffc2d1 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
       overflow: hidden;
-      animation: backgroundShift 15s ease infinite;
+      z-index: 0;
     }
 
-    @keyframes backgroundShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .heart {
+    .particle {
       position: absolute;
-      width: 100px;
-      height: 90px;
-      background: red;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(1);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-10vh) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    /* Main heart */
+    .heart {
+      position: relative;
+      width: 80px;
+      height: 72px;
+      background: #ff1744;
       transform: rotate(-45deg);
-      box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-      animation: float 6s ease-in-out infinite;
+      animation: heartbeat 2s ease-in-out infinite;
+      box-shadow: 0 0 15px #ff1744;
+      z-index: 2;
+      margin-bottom: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .heart:hover {
+      transform: rotate(-45deg) scale(1.1);
+      box-shadow: 0 0 30px #ff1744;
     }
 
     .heart::before,
     .heart::after {
       content: "";
       position: absolute;
-      width: 100px;
-      height: 90px;
-      background: red;
+      width: 80px;
+      height: 72px;
+      background: #ff1744;
       border-radius: 50%;
     }
 
     .heart::before {
-      top: -50px;
+      top: -40px;
       left: 0;
     }
 
     .heart::after {
-      left: 50px;
+      left: 40px;
       top: 0;
     }
 
-    @keyframes float {
-      0% { transform: rotate(-45deg) translateY(0); }
-      50% { transform: rotate(-45deg) translateY(-20px); }
-      100% { transform: rotate(-45deg) translateY(0); }
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: rotate(-45deg) scale(1);
+        box-shadow: 0 0 15px #ff1744;
+      }
+      50% {
+        transform: rotate(-45deg) scale(1.1);
+        box-shadow: 0 0 30px #ff1744;
+      }
+    }
+
+    /* Sparkle effect */
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      animation: sparkle 1s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes sparkle {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0;
+      }
+    }
+
+    /* Tap hearts */
+    .tap-heart {
+      position: absolute;
+      width: 20px;
+      height: 18px;
+      background: #ff1744;
+      transform: rotate(-45deg);
+      animation: floatHeart 3s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .tap-heart::before,
+    .tap-heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 18px;
+      background: #ff1744;
+      border-radius: 50%;
+    }
+
+    .tap-heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .tap-heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        transform: rotate(-45deg) scale(1) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-45deg) scale(0.5) translateY(-100px);
+        opacity: 0;
+      }
+    }
+
+    /* Shake hearts explosion */
+    .shake-heart {
+      position: absolute;
+      width: 30px;
+      height: 27px;
+      background: #ff1744;
+      transform: rotate(-45deg);
+      animation: explodeHeart 2s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .shake-heart::before,
+    .shake-heart::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 27px;
+      background: #ff1744;
+      border-radius: 50%;
+    }
+
+    .shake-heart::before {
+      top: -15px;
+      left: 0;
+    }
+
+    .shake-heart::after {
+      left: 15px;
+      top: 0;
+    }
+
+    @keyframes explodeHeart {
+      0% {
+        transform: rotate(-45deg) scale(0) translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: rotate(-45deg) scale(1.5) translateY(-20px);
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-45deg) scale(0.5) translateY(-150px);
+        opacity: 0;
+      }
+    }
+
+    .text-container {
+      position: relative;
+      z-index: 3;
+      max-width: 90%;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      animation: fadeInText 3s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInText {
+      to {
+        opacity: 1;
+      }
     }
 
     .text {
-      position: relative;
-      z-index: 2;
-      font-size: 2.5em;
+      font-size: clamp(1.2rem, 4vw, 2.2rem);
       color: white;
       text-align: center;
-      text-shadow: 4px 4px 10px rgba(0,0,0,0.4);
-      animation: wave 3s ease-in-out infinite;
-      max-width: 90%;
-      white-space: pre-line;
+      line-height: 1.6;
+      font-weight: 500;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    @keyframes wave {
-      0%, 100% { transform: translateY(0); }
-      25% { transform: translateY(-5px); }
-      50% { transform: translateY(5px); }
-      75% { transform: translateY(-3px); }
+    .text p {
+      margin-bottom: 15px;
+    }
+
+    .text p:first-child {
+      font-size: clamp(1.4rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #fff, #ffeb3b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Mobile-specific optimizations */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+        justify-content: flex-start;
+        min-height: 100vh;
+        height: auto;
+      }
+
+      .heart {
+        width: 60px;
+        height: 54px;
+        margin-bottom: 30px;
+      }
+
+      .heart::before,
+      .heart::after {
+        width: 60px;
+        height: 54px;
+      }
+
+      .text-container {
+        margin: 0 auto 30px;
+        padding: 20px;
+        max-width: 95%;
+      }
+
+      .text {
+        font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      }
+
+      .text p:first-child {
+        font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+      }
+    }
+
+    /* Small mobile devices */
+    @media (max-width: 375px) {
+      .text-container {
+        padding: 15px;
+      }
+
+      .text {
+        font-size: clamp(1rem, 3.2vw, 1.6rem);
+      }
+
+      .text p:first-child {
+        font-size: clamp(1.2rem, 4vw, 2rem);
+      }
+    }
+
+    /* Landscape orientation */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .text-container {
+        margin: 70px 20px 20px;
+        max-width: 80%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="heart"></div>
-  <div class="text">
-    <p>Min Söta Prinsessa</p>
-    <p>I love you more than words can show, I think about you more than you could ever know,
-until forever this will be true because there is no one I would ever love the way I love you.</p>
+  <div class="particles" aria-hidden="true">
+    <div class="particle" style="left: 10%; width: 6px; height: 6px; animation-duration: 12s; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 25%; width: 8px; height: 8px; animation-duration: 15s; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 40%; width: 5px; height: 5px; animation-duration: 10s; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 55%; width: 7px; height: 7px; animation-duration: 14s; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 70%; width: 6px; height: 6px; animation-duration: 13s; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 85%; width: 9px; height: 9px; animation-duration: 16s; animation-delay: 1s;"></div>
   </div>
+
+  <div class="heart" role="img" aria-label="Heart shape" id="mainHeart"></div>
+
+  <div class="text-container">
+    <div class="text" id="quoteContainer">
+      <p id="quoteText">Min Söta Prinsessa</p>
+      <p id="quoteContent">I love you more than words can show, I think about you more than you could ever know,
+    until forever this will be true because there is no one I would ever love the way I love you.</p>
+    </div>
+  </div>
+
+  <script>
+    // Array of quotes
+    const quotes = [
+      {
+        title: "Min Söta Prinsessa",
+        content: "I love you more than words can show, I think about you more than you could ever know, until forever this will be true because there is no one I would ever love the way I love you."
+      },
+      {
+        title: "My Beautiful Love",
+        content: "Every moment with you is a treasure, every smile from you is a gift. You are the reason my heart beats faster and my world is brighter."
+      },
+      {
+        title: "My Forever",
+        content: "In your eyes, I found my home. In your heart, I found my love. In your soul, I found my mate. You are my everything, now and always."
+      },
+      {
+        title: "My Heart's Desire",
+        content: "You are the missing piece that completes my puzzle, the melody that makes my heart sing, the dream that makes my life beautiful."
+      },
+      {
+        title: "My Eternal Love",
+        content: "From the moment I met you, my life changed forever. You are my sunshine on cloudy days, my strength when I'm weak, my love for all eternity."
+      },
+      {
+        title: "My Soulmate",
+        content: "You are the one I've been waiting for, the one my heart recognizes instantly. With you, every day is Valentine's Day, every moment is precious."
+      },
+      {
+        title: "My Dream Come True",
+        content: "I never knew what love was until I met you. You showed me the meaning of true love, and now I can't imagine my life without you."
+      },
+      {
+        title: "My Heart's Queen",
+        content: "You rule my heart with kindness and love. Every beat of my heart whispers your name, every breath I take is for you, my beautiful queen."
+      },
+      {
+        title: "My Perfect Love",
+        content: "You are my answered prayer, my wish come true, my dream realized. With you, I've found the love I've been searching for all my life."
+      },
+      {
+        title: "My Everything",
+        content: "You are the reason I wake up with a smile, the reason I go to bed with happy thoughts. You are my world, my life, my everything."
+      }
+    ];
+
+    // Function to display a random quote
+    function displayRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const quote = quotes[randomIndex];
+      
+      document.getElementById('quoteText').textContent = quote.title;
+      document.getElementById('quoteContent').textContent = quote.content;
+    }
+
+    // Display random quote on page load
+    displayRandomQuote();
+
+    // Tap to create hearts
+    document.addEventListener('click', function(e) {
+      if (e.target === document.body || e.target.classList.contains('particles')) {
+        createTapHeart(e.clientX, e.clientY);
+      }
+    });
+
+    // Heart sparkle effect
+    document.getElementById('mainHeart').addEventListener('click', function(e) {
+      createSparkles(e.clientX, e.clientY);
+    });
+
+    // Shake to show love
+    let lastShakeTime = 0;
+    window.addEventListener('devicemotion', function(e) {
+      const acceleration = e.accelerationIncludingGravity;
+      const shakeThreshold = 15;
+      const currentTime = Date.now();
+      
+      if (acceleration && acceleration.x && acceleration.y && acceleration.z) {
+        const totalAcceleration = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+        
+        if (totalAcceleration > shakeThreshold && currentTime - lastShakeTime > 1000) {
+          lastShakeTime = currentTime;
+          createShakeHearts();
+          
+          // Vibrate if supported
+          if ('vibrate' in navigator) {
+            navigator.vibrate(100);
+          }
+        }
+      }
+    });
+
+    function createTapHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.className = 'tap-heart';
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      document.body.appendChild(heart);
+      
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    function createSparkles(x, y) {
+      for (let i = 0; i < 8; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        sparkle.style.transform = `translate(${Math.random() * 40 - 20}px, ${Math.random() * 40 - 20}px)`;
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
+
+    function createShakeHearts() {
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'shake-heart';
+          heart.style.left = Math.random() * window.innerWidth + 'px';
+          heart.style.top = Math.random() * window.innerHeight + 'px';
+          document.body.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 2000);
+        }, i * 100);
+      }
+    }
+
+    // Add some random tap hearts occasionally
+    setInterval(() => {
+      if (Math.random() < 0.1) {
+        createTapHeart(
+          Math.random() * window.innerWidth,
+          Math.random() * window.innerHeight
+        );
+      }
+    }, 5000);
+  </script>
 </body>
 </html>
-
-
